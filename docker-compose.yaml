@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  backend:
+    restart: always
+    build: 
+      context: ./
+      dockerfile: backend/Dockerfile
+    ports:
+      - '5000:5000'
+    volumes:
+      - /app/backend/node_modules
+      - ./backend/src:/app/backend/src
