@@ -1,4 +1,3 @@
-console.log(process.env.NODE_ENV);
 module.exports = {
    "type": process.env.ITYPEORM_CONNECTION,
    "host": process.env.ITYPEORM_HOST,
@@ -8,15 +7,15 @@ module.exports = {
    "database": process.env.ITYPEORM_DATABASE,
    "synchronize": process.env.ITYPEORM_SYNCHRONIZE,
    "logging": process.env.ITYPEORM_LOGGING,
-   "migrationsTableName": "migrations",
+   "migrationsTableName": process.env.ITYPEORM_MIGRATION_TABLE,
    "entities": [
-      "src/entity/**/*.ts"
+      "build/entity/**/*.js"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "build/migration/**/*.js"
    ],
    "subscribers": [
-      "src/subscriber/**/*.ts"
+      "build/subscriber/**/*.js"
    ],
    "cli": {
       "entitiesDir": "src/entity",

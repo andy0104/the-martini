@@ -2,12 +2,12 @@ FROM node:alpine
 
 WORKDIR /app/backend
 
-COPY package.json .
+COPY ./package.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./ ./
 
 EXPOSE 5000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "prod"]

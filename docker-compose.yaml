@@ -3,10 +3,23 @@ services:
   backend:
     restart: always
     build: 
-      context: ./
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile.dev
     ports:
       - '5000:5000'
     volumes:
       - /app/backend/node_modules
-      - ./backend/src:/app/backend/src
+      - ./backend:/app/backend
+    depends_on:
+      - dbmysql
+  dbmysql:
+    image: 'mysql:5.7'
+    ports:
+      - '3306:3306'
+    volumes:
+      - /home/aninda/Development/node/the-martini/mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=the_martini
+      - MYSQL_USER=martini
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
