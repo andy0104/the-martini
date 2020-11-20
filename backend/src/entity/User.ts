@@ -1,10 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, Timestamp} from "typeorm";
-
-export enum UserRole {
-  SUPER_ADMIN='SUPER_ADMIN',
-  USER_ADMIN='USER_ADMIN',
-  USER_COLLABORATOR='USER_COLLABORATOR'
-}
+import { UserRole } from '../services/userroles';
 
 @Entity()
 export class User {
@@ -21,6 +16,9 @@ export class User {
     unique: true
   })
   email: string;
+
+  @Column()
+  password: string;
 
   @Column({
     unique: true
@@ -48,7 +46,7 @@ export class User {
   numLoginAttempts: number;
 
   @Column({
-    default: true
+    default: false
   })
   accountLocked: boolean;
 
