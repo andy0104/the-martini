@@ -16,6 +16,10 @@ export class UserRepository extends AbstractRepository<User> {
     return this.manager.save(user);
   }
 
+  getUserById(userId: string) {
+    return this.repository.findOne({ id: userId });
+  }
+
   getUserByUsername(userName: string) {
     return this.repository.findOne({ username: userName });
   }
