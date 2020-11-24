@@ -27,4 +27,8 @@ export class UserRepository extends AbstractRepository<User> {
   getUserByEmail(email: string) {
     return this.repository.findOne({ email });
   }
+
+  updateUser(user: User) {
+    return this.manager.save(user);
+  }
 }

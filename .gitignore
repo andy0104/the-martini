@@ -1,5 +1,6 @@
 .env
 *.backup
+*.zip
 .idea/
 .vscode/
 node_modules/

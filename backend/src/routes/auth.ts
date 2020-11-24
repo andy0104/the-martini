@@ -9,7 +9,7 @@ const router = Router();
 
 router
   .get('/', verifyAccessToken, getCurrentUser)
-
+  
   .post('/signup', [
     check('firstname').not().isEmpty().trim().escape(),
     check('lastname').not().isEmpty().trim().escape(),
