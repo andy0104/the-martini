@@ -1,5 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, Timestamp} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, Timestamp, OneToOne} from "typeorm";
 import { UserRole } from '../services/userroles';
+import { Company } from "./Company";
+import { Userrecovery } from "./Userrecovery";
 
 @Entity()
 export class User {
@@ -62,4 +64,10 @@ export class User {
     nullable: true
   })
   updateDate: Date;
+
+  @OneToOne(() => Userrecovery, userrecovery => userrecovery.user)
+  userrecovery: Promise<Userrecovery>;
+
+  @OneToOne(() => Company, company => company.user)
+  company: Promise<Company>;
 }

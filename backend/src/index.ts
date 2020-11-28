@@ -14,6 +14,7 @@ import { initDatabase } from './services/database';
 
 // Import the routers
 import AuthRouter from './routes/auth';
+import CompanyRouter from './routes/company';
 
 // Load the env variables
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(morgan('dev'));
 
 // Setup the application routes
 app.use('/api/auth', AuthRouter);
+app.use('/api/company', CompanyRouter);
 
 // Error middleware
 app.use(ErrorHandler);
@@ -34,6 +36,18 @@ app.use(ErrorHandler);
 app.listen(PORT, () => {
   initDatabase();
   console.log(`Server listening on PORT ${PORT} in ${process.env.NODE_ENV} mode!`);
+});
+
+// get the unhandled rejection and throw it to another fallback handler we already have.
+process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
+  console.log(reason.message);
+  throw reason;
+});
+
+process.on('uncaughtException', (err) => {
+  console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+  console.error(err.stack);
+  process.exit(1);
 });
 
 

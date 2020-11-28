@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { UserRole } from './userroles';
 
 export const verifyAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
   // Get the access token from the request header  
@@ -41,5 +42,14 @@ export const verifyResfreshToken = async (req: Request, res: Response, next: Nex
       console.error(error);
       return res.status(401).json({ msg: 'Unauthorised access' });  
     }
+  }
+}
+
+export const verifyIfAdmin = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+  const { payload: { sub, role } } = req.body;
+  if (role === UserRole.USER_ADMIN || role === UserRole.SUPER_ADMIN) {
+    next();
+  } else {
+    return res.status(401).json({ msg: 'Unauthorised access' });
   }
 }

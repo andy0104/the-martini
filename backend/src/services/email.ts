@@ -1,15 +1,15 @@
 import sgMail from '@sendgrid/mail';
 
-export default async (): Promise<boolean> => {
+export default async (receiverEmail: string, mailSubject: string, mailContent: string): Promise<boolean> => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
-    to: 'andy0104@gmail.com',
-    from: 'testcode0104@gmail.com', // Use the email address or domain you verified above
-    subject: 'Sending with Twilio SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    to: receiverEmail,
+    from: 'Martini Support<testcode0104@gmail.com>', // Use the email address or domain you verified above
+    subject: mailSubject,
+    text: mailSubject,
+    html: mailContent,
   };
-
+  
   try {
     await sgMail.send(msg);
   } catch (error) {

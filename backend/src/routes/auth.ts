@@ -3,7 +3,7 @@ import { check } from 'express-validator';
 
 import { verifyAccessToken, verifyResfreshToken } from '../services/verifytoken';
 import { UserRole } from '../services/userroles';
-import { getCurrentUser, signUpUser, signInUser, refreshAccessToken } from '../controllers/Auth';
+import { getCurrentUser, signUpUser, signInUser, refreshAccessToken, sendPasswordRecovery, verifyRecoveryCode, resetPassword } from '../controllers/Auth';
 
 const router = Router();
 
@@ -25,7 +25,21 @@ router
     check('password').not().isEmpty().trim().escape().withMessage('Password field is required')
   ], signInUser)
   
-  .get('/token', verifyResfreshToken, refreshAccessToken);
+  .get('/token', verifyResfreshToken, refreshAccessToken)
+  
+  .get('/send-recovery-code', [
+    check('username').not().isEmpty().trim().escape().withMessage('Username field is required')
+  ], sendPasswordRecovery)
+  
+  .post('/verify-recovery-code', [
+    check('recovery_code').not().isEmpty().trim().escape().withMessage('Recovery code field is required')
+  ], verifyRecoveryCode)
+  
+  .post('/reset-password', [
+    check('recovery_code').not().isEmpty().trim().escape().withMessage('Recovery code field is required'),
+    check('user_password').trim().isLength({ min: 8, max: 20 }).withMessage('Password should be of minimum 8 characters').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i").withMessage('Password should have at least one letter, one number and one special character')
+  ], resetPassword);
+
 
 
 export default router;
