@@ -15,6 +15,7 @@ import { initDatabase } from './services/database';
 // Import the routers
 import AuthRouter from './routes/auth';
 import CompanyRouter from './routes/company';
+import ProjectRouter from './routes/project';
 
 // Load the env variables
 dotenv.config();
@@ -29,6 +30,7 @@ app.use(morgan('dev'));
 // Setup the application routes
 app.use('/api/auth', AuthRouter);
 app.use('/api/company', CompanyRouter);
+app.use('/api/project', ProjectRouter);
 
 // Error middleware
 app.use(ErrorHandler);

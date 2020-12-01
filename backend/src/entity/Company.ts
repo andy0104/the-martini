@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Project } from "./Project";
 import { User } from "./User";
 
 @Entity()
@@ -19,4 +20,7 @@ export class Company {
   @OneToOne(type => User)
   @JoinColumn()
   user: Promise<User>;
+
+  @OneToMany(type => Project, project => project.company)
+  projects: Promise<Project[]>;
 }

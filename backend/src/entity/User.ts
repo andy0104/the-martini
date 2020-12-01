@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, Timestamp, OneToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, Timestamp, OneToOne, OneToMany} from "typeorm";
 import { UserRole } from '../services/userroles';
 import { Company } from "./Company";
+import { Projectinvites } from "./Projectinvites";
 import { Userrecovery } from "./Userrecovery";
 
 @Entity()
@@ -53,6 +54,11 @@ export class User {
   accountLocked: boolean;
 
   @Column({
+    default: false
+  })
+  companyCreated: boolean;
+
+  @Column({
     type: 'timestamp',
     nullable: false,
     default: () => "CURRENT_TIMESTAMP"    
@@ -69,5 +75,5 @@ export class User {
   userrecovery: Promise<Userrecovery>;
 
   @OneToOne(() => Company, company => company.user)
-  company: Promise<Company>;
+  company: Promise<Company>;  
 }

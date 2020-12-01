@@ -94,7 +94,8 @@ export const signUpUser = async (req: Request, res: Response): Promise<Response<
                   lastname: userName.lastName,
                   email: userName.email,
                   username: userName.username,
-                  role: userName.role
+                  role: userName.role,
+                  company_created: userName.companyCreated
                 }
               });
       } else {
@@ -148,7 +149,8 @@ export const signInUser = async (req: Request, res: Response): Promise<Response<
                   lastname: userName.lastName,
                   email: userName.email,
                   username: userName.username,
-                  role: userName.role
+                  role: userName.role,
+                  company_created: userName.companyCreated
                 }
               });
       } else {
