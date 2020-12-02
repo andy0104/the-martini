@@ -1,5 +1,12 @@
 version: "3.8"
 services:
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
   backend:
     restart: always
     build: 
@@ -11,6 +18,7 @@ services:
       - /app/backend/node_modules
       - ./backend:/app/backend
     depends_on:
+      - nginx
       - dbmysql
   dbmysql:
     restart: always

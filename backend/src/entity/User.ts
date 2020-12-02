@@ -41,8 +41,7 @@ export class User {
   active: boolean;
 
   @Column({
-    type: 'int'
-    width: 2,
+    type: 'int',
     unsigned: true,
     default: 0
   })

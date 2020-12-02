@@ -28,9 +28,9 @@ app.use(morgan('dev'));
 // app.use(device.capture());
 
 // Setup the application routes
-app.use('/api/auth', AuthRouter);
-app.use('/api/company', CompanyRouter);
-app.use('/api/project', ProjectRouter);
+app.use('/auth', AuthRouter);
+app.use('/company', CompanyRouter);
+app.use('/project', ProjectRouter);
 
 // Error middleware
 app.use(ErrorHandler);

@@ -44,6 +44,7 @@
       "dev": "concurrently npm:start-*",
       "start": "ts-node src/index.ts",
       "prod": "node ./build/index.js",
+      "build": "tsc",
       "typeorm": "ts-node ./node_modules/typeorm/cli.js"
    }
 }

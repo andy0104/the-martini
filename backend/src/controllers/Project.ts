@@ -96,15 +96,6 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
         const invite = await projInviteRepo.saveInvites(email, project);
         if (emailArray.length === (index + 1)) {
           console.log('Loop is finished');
-          return res
-              .status(200)
-              .json({
-                error: false,
-                msg: [{ message: 'Project invitation send successfully' }],
-                data: {
-                  invites: []
-                }
-              });
         }  
       } catch (error) {
         console.log(error);
@@ -112,15 +103,15 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
       }
     });
 
-    // return res
-    //         .status(200)
-    //         .json({
-    //           error: false,
-    //           msg: [{ message: 'Project invitation send successfully' }],
-    //           data: {
-    //             invites: []
-    //           }
-    //         });
+    return res
+            .status(200)
+            .json({
+              error: false,
+              msg: [{ message: 'Project invitation send successfully' }],
+              data: {
+                invites: []
+              }
+            });
   } else {
     throw new Unauthorized('Unauthorized access');
   } 
