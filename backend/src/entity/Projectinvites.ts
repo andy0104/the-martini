@@ -12,6 +12,9 @@ export class Projectinvites {
   @Column()
   email: string;
 
+  @Column()
+  code: string;
+
   @Column({
     type: 'enum',
     enum: InviteStatus,

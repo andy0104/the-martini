@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { getCustomRepository } from 'typeorm';
+import bcrypt from 'bcryptjs';
 import { Project } from '../entity/Project';
 import DuplicateEntryError from '../errors/duplicateentryerror';
 import RequestValidationError from '../errors/requestvalidationerror';
 import Unauthorized from '../errors/unauthorized';
-import { CompanyRepository } from '../repository/CompanyRepository';
 import ProjectInviteRepository from '../repository/ProjectInviteRepository';
 import { ProjectRepository } from '../repository/ProjectRepository';
 import { UserRepository } from '../repository/UserRepository';
@@ -85,29 +85,34 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
   const company = await user.company;
 
   if (project && company && JSON.stringify(projCompany) === JSON.stringify(company)) {
-    // const emailSendingStatus = emails.split(',').map(email => {
-    //                             console.log(email, project_id);
-    //                             return Promise.resolve(saveProjectInvite(email, project));
-    //                           });
     const emailArray = emails.split(',');
     emailArray.forEach(async (email, index) => {
       console.log(email, index);
-      try {
-        const invite = await projInviteRepo.saveInvites(email, project);
-        if (emailArray.length === (index + 1)) {
-          console.log('Loop is finished');
-        }  
-      } catch (error) {
-        console.log(error);
-        throw new DuplicateEntryError(`${email} has already been invited`);
-      }
+      
+      const isSend = await projInviteRepo.checkInviteAlreadySend(email, project);
+      console.log(isSend);
+
+      if (!isSend) {
+        // Create the invite code
+        const inviteCode = await bcrypt.genSalt(10);
+        console.log(inviteCode);
+
+        const invite = await projInviteRepo.saveInvites(email, inviteCode, project);
+
+        // Send email link for project invite
+        
+
+        console.log(`Invitation sent to ${invite.email}`);
+      } else {
+        console.log(`Invitation has already been sent to ${email}`);
+      }      
     });
 
     return res
             .status(200)
             .json({
               error: false,
-              msg: [{ message: 'Project invitation send successfully' }],
+              msg: [{ message: 'The email(s) have been submitted for sending the invites' }],
               data: {
                 invites: []
               }
