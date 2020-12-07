@@ -8,6 +8,7 @@ services:
     ports:
       - '3050:80'
   backend:
+    image: the_martini_backend
     restart: always
     build: 
       context: ./backend
@@ -23,6 +24,8 @@ services:
   dbmysql:
     restart: always
     image: 'mysql:5.7'
+    # entrypoint: sh -c "
+    #     echo 'CREATE DATABASE IF NOT EXISTS the_martini; CREATE DATABASE IF NOT EXISTS the_martini_test;' > /docker-entrypoint-initdb.d/init.sql;/usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     ports:
       - '3306:3306'
     volumes:
@@ -31,4 +34,4 @@ services:
       - MYSQL_DATABASE=the_martini
       - MYSQL_USER=martini
       - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret  

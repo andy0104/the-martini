@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { getCustomRepository } from 'typeorm';
 import bcrypt from 'bcryptjs';
@@ -23,12 +23,12 @@ export const createProject = async (req: Request, res: Response): Promise<Respon
   const { project_name, payload: { sub }} = req.body;
 
   // Check if user has added company
-  const userRepo = getCustomRepository(UserRepository);
+  const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
   const user = await userRepo.getUserById(sub);
 
   if (checkUserActiveLocked(user)){
     const company = await user.company;
-    const projRepo = getCustomRepository(ProjectRepository);
+    const projRepo = getCustomRepository(ProjectRepository, process.env.NODE_ENV);
 
     if (company) {      
       const existProject = await projRepo.checkProjectExist(project_name);
@@ -75,9 +75,9 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
   console.log(emails, project_id, sub, role);
 
   // Check if the project exist
-  const projRepo = getCustomRepository(ProjectRepository);
-  const userRepo = getCustomRepository(UserRepository);  
-  const projInviteRepo = getCustomRepository(ProjectInviteRepository);
+  const projRepo = getCustomRepository(ProjectRepository, process.env.NODE_ENV);
+  const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);  
+  const projInviteRepo = getCustomRepository(ProjectInviteRepository, process.env.NODE_ENV);
 
   const project = await projRepo.getProjectById(project_id);
   const projCompany = await project.company;
@@ -86,8 +86,9 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
 
   if (project && company && JSON.stringify(projCompany) === JSON.stringify(company)) {
     const emailArray = emails.split(',');
-    emailArray.forEach(async (email, index) => {
-      console.log(email, index);
+    //emailArray.forEach(async (email, index) => {
+    for await (const email of emailArray) {          
+      console.log(email);
       
       const isSend = await projInviteRepo.checkInviteAlreadySend(email, project);
       console.log(isSend);
@@ -100,13 +101,13 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
         const invite = await projInviteRepo.saveInvites(email, inviteCode, project);
 
         // Send email link for project invite
-        
+
 
         console.log(`Invitation sent to ${invite.email}`);
       } else {
         console.log(`Invitation has already been sent to ${email}`);
       }      
-    });
+    }
 
     return res
             .status(200)
@@ -122,13 +123,13 @@ export const sendProjectInvites = async (req: Request, res: Response): Promise<R
   } 
 }
 
-const saveProjectInvite = async (email: string, project: Project) => {
-  const projInviteRepo = getCustomRepository(ProjectInviteRepository);
-
-  try {
-    const invite = await projInviteRepo.saveInvites(email, project);
-    return true;
-  } catch (error) {
-    throw new DuplicateEntryError(`${email} is already invited to the project`);
-  }  
+export const testMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  res.locals.message = 'This is dummy testing middleware'
+  res.locals.data = {    
+    user: {
+      id: 1,
+      name: 'aninda.kar'
+    }
+  };
+  next();
 }

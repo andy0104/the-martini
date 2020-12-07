@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { createProject, sendProjectInvites } from '../controllers/Project';
+import { createProject, sendProjectInvites, testMiddleware } from '../controllers/Project';
 import { verifyAccessToken, verifyIfAdmin } from '../services/verifytoken';
+import sendResponse from '../services/response';
 
 const router = Router();
 
@@ -25,6 +26,8 @@ router
         return true;
       }
     }).withMessage('All the values must be a valid email id')
-  ], verifyAccessToken, verifyIfAdmin, sendProjectInvites);
+  ], verifyAccessToken, verifyIfAdmin, sendProjectInvites)
+  
+  .get('/test-middleware', testMiddleware, sendResponse);
 
 export default router;

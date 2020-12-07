@@ -1,4 +1,4 @@
-import { AbstractRepository, EntityRepository } from "typeorm";
+import { AbstractRepository, EntityRepository, getConnection } from "typeorm";
 import { Company } from "../entity/Company";
 import { User } from "../entity/User";
 
@@ -8,10 +8,10 @@ export class CompanyRepository extends AbstractRepository<Company> {
     const company = new Company();
     company.company_name = company_name;
     company.user = Promise.resolve(user);
-    return this.manager.save(company);
+    return getConnection(process.env.NODE_ENV).manager.save(company); // this.manager.save(company);
   }
 
   updateCompany(company: Company) {
-    return this.manager.save(company);
+    return getConnection(process.env.NODE_ENV).manager.save(company); // this.manager.save(company);
   }
 }

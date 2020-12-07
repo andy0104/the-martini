@@ -18,11 +18,11 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
   const { company_name, payload } = req.body;
 
   // Check if user has added company
-  const userRepo = getCustomRepository(UserRepository);
+  const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
   const user = await userRepo.getUserById(payload.sub);    
 
   if (checkUserActiveLocked(user)) {
-    const companyRepo = getCustomRepository(CompanyRepository);
+    const companyRepo = getCustomRepository(CompanyRepository, process.env.NODE_ENV);
     let company = await user.company;    
 
     if (!company) {      

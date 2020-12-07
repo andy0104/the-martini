@@ -22,7 +22,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<Respo
 
   
     // Check if user exists or not
-    const userRepo = getCustomRepository(UserRepository);
+    const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
     const user = await userRepo.getUserById(sub);  
 
     if (user && user.active && !user.accountLocked) {
@@ -60,7 +60,7 @@ export const signUpUser = async (req: Request, res: Response): Promise<Response<
       const hashPassword = await bcrypt.hash(password, salt);      
 
       // Check if username is already taken
-      const userRepo = getCustomRepository(UserRepository);
+      const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
       const userName = await userRepo.getUserByUsername(username);      
 
       // Check if email is already registered
@@ -119,7 +119,7 @@ export const signInUser = async (req: Request, res: Response): Promise<Response<
     const { username, password } = req.body;
 
     // Check if username does exist or not
-    const userRepo = getCustomRepository(UserRepository);
+    const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
     const userName = await userRepo.getUserByUsername(username);    
 
     // Check if the user exists or the account is not locked
@@ -200,7 +200,7 @@ export const sendPasswordRecovery = async (req: Request, res: Response): Promise
     const { username, password } = req.body;
 
     // Check if username does exist or not
-    const userRepo = getCustomRepository(UserRepository);
+    const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
     const userName = await userRepo.getUserByUsername(username); 
 
     if (userName && userName.active && !userName.accountLocked) {
@@ -209,7 +209,7 @@ export const sendPasswordRecovery = async (req: Request, res: Response): Promise
       const recoveryCode = await bcrypt.genSalt(10);
 
       // Check if user recovery code is already added
-      const recoveryRepo = getCustomRepository(UserRecoveryRepository);
+      const recoveryRepo = getCustomRepository(UserRecoveryRepository, process.env.NODE_ENV);
       let recovery = await userName.userrecovery; // await recoveryRepo.getUserRecoveryCode(userName);
       
       if (recovery) {
@@ -253,7 +253,7 @@ export const verifyRecoveryCode = async (req: Request, res: Response): Promise<R
   const { recovery_code } = req.body;
 
   // Check if the recovery code is valid
-  const recoveryRepo = getCustomRepository(UserRecoveryRepository);
+  const recoveryRepo = getCustomRepository(UserRecoveryRepository, process.env.NODE_ENV);
   const userRecovery = await recoveryRepo.checkUserRecoveryCode(decodeURIComponent(recovery_code));
   console.log(decodeURIComponent(recovery_code));
   console.log(userRecovery);
@@ -282,7 +282,7 @@ export const resetPassword = async (req: Request, res: Response) => {
   const { recovery_code, user_password } = req.body;
 
   // Check if the recovery code is valid
-  const recoveryRepo = getCustomRepository(UserRecoveryRepository);
+  const recoveryRepo = getCustomRepository(UserRecoveryRepository, process.env.NODE_ENV);
   const userRecovery = await recoveryRepo.checkUserRecoveryCode(decodeURIComponent(recovery_code));  
   console.log(decodeURIComponent(recovery_code));
   console.log(userRecovery);  
@@ -295,7 +295,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     console.log(hashPassword);
 
     // Save the user password
-    const userRepo = getCustomRepository(UserRepository);
+    const userRepo = getCustomRepository(UserRepository, process.env.NODE_ENV);
     const user = await userRecovery.user;
     console.log(user);
     user.password = hashPassword;
