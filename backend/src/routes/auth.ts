@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { check } from 'express-validator';
+import bcrypt from 'bcryptjs';
+import os from 'os';
 
 import { verifyAccessToken, verifyResfreshToken } from '../services/verifytoken';
 import { UserRole } from '../services/userroles';
@@ -38,8 +40,21 @@ router
   .post('/reset-password', [
     check('recovery_code').not().isEmpty().trim().escape().withMessage('Recovery code field is required'),
     check('user_password').trim().isLength({ min: 8, max: 20 }).withMessage('Password should be of minimum 8 characters').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i").withMessage('Password should have at least one letter, one number and one special character')
-  ], resetPassword);
+  ], resetPassword)
+  
+  .get('/cores', (req, res) => {
+    console.log(`Logical count: ${os.cpus().length}`);
+    console.log(os.cpus());
+    return res.status(200).json({ });
+  })
 
-
+  .get('/pulse', async (req, res) => {
+    return res.status(200).json({ message: 'pulse'});
+  })
+  
+  .get('/stress', async (req, res) => {
+    const hash = await bcrypt.hash('this is a long password', 10);
+    return res.status(200).json({ message: 'stress', hash });
+  });
 
 export default router;
